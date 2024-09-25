@@ -62,8 +62,13 @@ public class AsyncStreamingServlet extends HttpServlet {
             in.setReadListener(new ReadListener() {
                 @Override
                 public void onDataAvailable() throws IOException {
-                    byte[] bytes = in.readAllBytes();
-                    LOG.info("DataAvailable #" + id + ", " + bytes.length + "bytes");
+                    int total = 0;
+                    byte[] bytes = new byte[1024];
+                    while (in.isReady()) {
+                        int read = in.read(bytes);
+                        total += read;
+                    }
+                    LOG.info("DataAvailable #" + id + ", " + total + "bytes");
                 }
 
                 @Override
