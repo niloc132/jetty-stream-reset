@@ -6,7 +6,6 @@ import org.eclipse.jetty.client.Request;
 import org.eclipse.jetty.client.Result;
 import org.eclipse.jetty.http2.client.HTTP2Client;
 import org.eclipse.jetty.http2.client.transport.HttpClientTransportOverHTTP2;
-import org.eclipse.jetty.util.FutureCallback;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
