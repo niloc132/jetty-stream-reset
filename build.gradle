@@ -1,0 +1,5 @@
+allprojects { p ->
+    p.repositories {
+        mavenCentral()
+    }
+}

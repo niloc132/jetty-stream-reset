@@ -1,0 +1,21 @@
+plugins {
+    id 'java'
+    id 'application'
+}
+
+dependencies {
+    implementation(platform('org.eclipse.jetty:jetty-bom:11.0.24'))
+    implementation('org.eclipse.jetty.http2:http2-server')
+
+    implementation('org.eclipse.jetty:jetty-servlet')
+    implementation('org.eclipse.jetty:jetty-servlets')
+    implementation('org.eclipse.jetty:jetty-webapp')
+
+    implementation(project(':servlet'))
+
+    implementation('org.slf4j:slf4j-simple:2.0.13')
+}
+
+application {
+    mainClass = 'com.example.jetty11.Server'
+}
