@@ -1,5 +1,7 @@
 ## Jetty 11/12 async servlet stream reset behavior
 
+This is a test case to reproduce https://github.com/jetty/jetty.project/issues/12313.
+
 This is an example project to explore how Jetty invokes async servlet callbacks when a client disconnects.
 A servlet is set up to run from an h2c-only server (no tls for easier setup) on port 10000. There are three
 commands that can run servers in this way:
