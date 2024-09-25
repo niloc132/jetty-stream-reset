@@ -11,6 +11,8 @@ import jakarta.servlet.WriteListener;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
@@ -20,6 +22,8 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class AsyncStreamingServlet extends HttpServlet {
+    private static final Logger LOG = LoggerFactory.getLogger(AsyncStreamingServlet.class);
+
     private final List<ClientConnection> connections = Collections.synchronizedList(new ArrayList<>());
     private final AtomicInteger nextId = new AtomicInteger(0);
 
@@ -35,41 +39,41 @@ public class AsyncStreamingServlet extends HttpServlet {
             ctx.addListener(new AsyncListener() {
                 @Override
                 public void onComplete(AsyncEvent asyncEvent) throws IOException {
-                    System.out.println("Complete #" + id);
+                    LOG.info("Complete #" + id);
                 }
 
                 @Override
                 public void onTimeout(AsyncEvent asyncEvent) throws IOException {
-                    System.out.println("Timeout #" + id);
+                    LOG.info("Timeout #" + id);
                 }
 
                 @Override
                 public void onError(AsyncEvent asyncEvent) throws IOException {
-                    System.out.println("Error #" + id);
+                    LOG.info("Error #" + id);
                     connections.remove(ClientConnection.this);
                     ctx.complete();
                 }
 
                 @Override
                 public void onStartAsync(AsyncEvent asyncEvent) throws IOException {
-                    System.out.println("Start #" + id);
+                    LOG.info("Start #" + id);
                 }
             });
             in.setReadListener(new ReadListener() {
                 @Override
                 public void onDataAvailable() throws IOException {
                     byte[] bytes = in.readAllBytes();
-                    System.out.println("DataAvailable #" + id + ", " + bytes.length + "bytes");
+                    LOG.info("DataAvailable #" + id + ", " + bytes.length + "bytes");
                 }
 
                 @Override
                 public void onAllDataRead() throws IOException {
-                    System.out.println("AllDataRead #" + id);
+                    LOG.info("AllDataRead #" + id);
                 }
 
                 @Override
                 public void onError(Throwable throwable) {
-                    System.out.println("Read Error #" + id);
+                    LOG.info("Read Error #" + id);
                     connections.remove(ClientConnection.this);
                     ctx.complete();
                 }
@@ -78,12 +82,12 @@ public class AsyncStreamingServlet extends HttpServlet {
             out.setWriteListener(new WriteListener() {
                 @Override
                 public void onWritePossible() throws IOException {
-                    System.out.println("WritePossible #" + id);
+                    LOG.info("WritePossible #" + id);
                 }
 
                 @Override
                 public void onError(Throwable t) {
-                    System.out.println("Write Error #" + id);
+                    LOG.info("Write Error #" + id);
                     connections.remove(ClientConnection.this);
                     ctx.complete();
                 }
@@ -97,7 +101,7 @@ public class AsyncStreamingServlet extends HttpServlet {
         public void println(String msg) {
             try {
                 if (out.isReady()) {
-                    System.out.println(msg);
+                    LOG.info(msg);
                     out.println(msg);
                     if (out.isReady()) {
                         out.flush();
@@ -122,9 +126,7 @@ public class AsyncStreamingServlet extends HttpServlet {
 
         final int id = nextId.getAndIncrement();
 
-        System.out.println("New request #" + id);
-
-        sayHi();
+        LOG.info("New request #" + id);
 
         ClientConnection c = new ClientConnection(id, asyncCtx);
         connections.add(c);

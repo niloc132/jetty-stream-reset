@@ -4,4 +4,6 @@ plugins {
 
 dependencies {
     api('jakarta.servlet:jakarta.servlet-api:6.1.0')
+
+    implementation('org.slf4j:slf4j-api:2.0.13')
 }

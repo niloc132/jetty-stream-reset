@@ -7,12 +7,16 @@ import org.eclipse.jetty.server.HttpConfiguration;
 import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 public class Server {
+    private static final Logger LOG = LoggerFactory.getLogger(Server.class);
+
     public static void main(String[] args) throws Exception {
         org.eclipse.jetty.server.Server s = new org.eclipse.jetty.server.Server();
         HttpConfiguration httpConfiguration = new HttpConfiguration();
@@ -35,7 +39,7 @@ public class Server {
                 servlet.sayHi();
             } catch (Exception e) {
                 // log and continue
-                e.printStackTrace();
+                LOG.warn("Error writing in exec service", e);
             }
         }, 1, 1, TimeUnit.SECONDS);
 
