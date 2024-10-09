@@ -33,15 +33,15 @@ public class Server {
         context.addServlet(new ServletHolder(servlet), "/connect");
         s.setHandler(context);
 
-        ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
-        executorService.scheduleAtFixedRate(() -> {
-            try {
-                servlet.sayHi();
-            } catch (Exception e) {
-                // log and continue
-                LOG.warn("Error writing in exec service", e);
-            }
-        }, 1, 1, TimeUnit.SECONDS);
+//        ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
+//        executorService.scheduleAtFixedRate(() -> {
+//            try {
+//                servlet.sayHi();
+//            } catch (Exception e) {
+//                // log and continue
+//                LOG.warn("Error writing in exec service", e);
+//            }
+//        }, 1, 1, TimeUnit.SECONDS);
 
         s.start();
         s.join();

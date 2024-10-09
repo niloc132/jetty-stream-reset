@@ -127,13 +127,14 @@ public class AsyncStreamingServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         AsyncContext asyncCtx = req.startAsync(req, resp);
-        asyncCtx.setTimeout(10_000);
+        asyncCtx.setTimeout(100_000);
 
         final int id = nextId.getAndIncrement();
 
         LOG.info("New request #" + id);
 
         ClientConnection c = new ClientConnection(id, asyncCtx);
+        c.println("startup");
         connections.add(c);
     }
 
